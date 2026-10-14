@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from aoc2025 import day00, day01
+from aoc2025 import day00, day01, day02
 
 
 def solve() -> None:
@@ -18,3 +18,5 @@ def solve() -> None:
     rotations = day01.read_rotations(inputs / "Day01.txt")
     print(f"Day01 - part1: {day01.part1(rotations)}")
     print(f"Day01 - part2: {day01.part2(rotations)}")
+    ranges = day02.read_ranges(inputs / "Day02.txt")
+    print(f"Day02 - part1: {day02.part1(ranges)}")
