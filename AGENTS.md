@@ -68,6 +68,14 @@ marker sits outside the article, and `matchedPart` (1-based) attributing an
 `--answer` match to part 1 or part 2 by accepted-code document order. Add new
 helpers only after repeated puzzle or workflow requirements justify them.
 
+`scripts/aoc_repo_check.py` runs the standard validation commands (format,
+lint, tests, solve) plus a git parity/cleanliness check and prints one JSON
+evidence report; see the `Validation` section below for the exact commands it
+wraps. Use it in a review to capture deterministic evidence instead of
+hand-copying command output: `python3 scripts/aoc_repo_check.py [--repo DIR]`
+(defaults to `$AOC_REPO_DIR` or the current directory). It is read-only and
+exits nonzero if any check fails or the working tree is dirty or diverged.
+
 ## Validation
 
 ```bash
