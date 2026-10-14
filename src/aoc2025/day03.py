@@ -1,10 +1,10 @@
 """Day03: maximise the joltage from each lobby escalator battery bank.
 
 Each line of the puzzle input is a *bank* of batteries labelled with a joltage
-rating digit (``1`` through ``9``). Part 1 turns on exactly two batteries per
-bank and reads the bank's joltage as the two-digit number formed by the chosen
-digits in their original order, so the answer is the sum of the largest such
-two-digit number from every bank.
+rating digit (``1`` through ``9``). Within a bank a fixed number of batteries is
+turned on and their joltage is the number formed by the chosen digits in their
+original order. Part 1 turns on exactly two batteries per bank; part 2 turns on
+exactly twelve. The answer is the sum of the largest such joltage from every bank.
 """
 
 from collections.abc import Sequence
@@ -62,3 +62,37 @@ def part1(banks: Sequence[str]) -> int:
     digits across all banks and ``M`` is the length of the longest bank.
     """
     return sum(largest_pair_joltage(bank) for bank in banks)
+
+
+def largest_k_digit_joltage(bank: str, count: int = 12) -> int:
+    """Return the largest ``count``-digit joltage obtainable from ``bank``.
+
+    Exactly ``count`` batteries are turned on and keep their original order, so
+    the result is the numerically largest ``count``-digit subsequence of the
+    bank's digits. A monotonic stack greedily replaces an earlier kept digit
+    with a later larger one while enough digits can still be discarded, so an
+    ``n``-digit bank runs in O(n) time and O(n) space. A ``count`` below one or
+    a bank shorter than ``count`` digits raises ValueError.
+    """
+    if count < 1:
+        raise ValueError("count must be at least one")
+    if len(bank) < count:
+        raise ValueError("bank must contain at least count digits")
+    digits = [int(char) for char in bank]
+    removable = len(digits) - count
+    kept: list[int] = []
+    for digit in digits:
+        while removable and kept and kept[-1] < digit:
+            kept.pop()
+            removable -= 1
+        kept.append(digit)
+    return int("".join(str(value) for value in kept[:count]))
+
+
+def part2(banks: Sequence[str]) -> int:
+    """Return the total joltage by summing each bank's largest 12-digit joltage.
+
+    Runs in O(N) time and O(M) extra space, where ``N`` is the total number of
+    digits across all banks and ``M`` is the length of the longest bank.
+    """
+    return sum(largest_k_digit_joltage(bank) for bank in banks)

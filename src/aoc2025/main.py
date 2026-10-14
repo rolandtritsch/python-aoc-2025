@@ -23,3 +23,4 @@ def solve() -> None:
     print(f"Day02 - part2: {day02.part2(ranges)}")
     banks = day03.read_banks(inputs / "Day03.txt")
     print(f"Day03 - part1: {day03.part1(banks)}")
+    print(f"Day03 - part2: {day03.part2(banks)}")

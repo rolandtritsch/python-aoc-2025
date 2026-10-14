@@ -51,6 +51,56 @@ def test_part1_equal_digits() -> None:
     assert day03.part1(["55555"]) == 55
 
 
+def test_part2_sample() -> None:
+    assert day03.part2(SAMPLE_BANKS) == 3121910778619
+
+
+def test_part2_bundled_sample_file() -> None:
+    banks = day03.read_banks(INPUTS / "Day03Test.txt")
+    assert banks == SAMPLE_BANKS
+    assert day03.part2(banks) == 3121910778619
+
+
+def test_part2_real_input() -> None:
+    banks = day03.read_banks(INPUTS / "Day03.txt")
+    assert day03.part2(banks) == 170997883706617
+
+
+def test_part2_no_banks() -> None:
+    assert day03.part2([]) == 0
+
+
+def test_part2_exact_length_bank() -> None:
+    assert day03.part2(["987654321111"]) == 987654321111
+
+
+@pytest.mark.parametrize(
+    ("bank", "count", "expected"),
+    [
+        ("98765432198765", 12, 987654398765),
+        ("12345678912345", 12, 345678912345),
+        ("98765432112345", 12, 987654322345),
+        ("19999999999999", 12, 999999999999),
+        ("555555555555", 12, 555555555555),
+        ("819", 2, 89),
+        ("978", 2, 98),
+        ("7", 1, 7),
+    ],
+)
+def test_largest_k_digit_joltage(bank: str, count: int, expected: int) -> None:
+    assert day03.largest_k_digit_joltage(bank, count) == expected
+
+
+def test_largest_k_digit_joltage_too_short() -> None:
+    with pytest.raises(ValueError, match="at least count"):
+        day03.largest_k_digit_joltage("98765432111", 12)
+
+
+def test_largest_k_digit_joltage_bad_count() -> None:
+    with pytest.raises(ValueError, match="count"):
+        day03.largest_k_digit_joltage("1234", 0)
+
+
 @pytest.mark.parametrize(
     ("bank", "expected"),
     [
