@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from aoc2025 import day00, day01, day02, day03, day04, day05
+from aoc2025 import day00, day01, day02, day03, day04, day05, day06
 
 
 def solve() -> None:
@@ -30,3 +30,5 @@ def solve() -> None:
     database = day05.read_database(inputs / "Day05.txt")
     print(f"Day05 - part1: {day05.part1(database.ranges, database.available)}")
     print(f"Day05 - part2: {day05.part2(database.ranges)}")
+    worksheet = day06.read_worksheet(inputs / "Day06.txt")
+    print(f"Day06 - part1: {day06.part1(worksheet)}")

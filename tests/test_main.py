@@ -22,6 +22,7 @@ EXPECTED = (
     "Day04 - part2: 8713\n"
     "Day05 - part1: 848\n"
     "Day05 - part2: 334714395325710\n"
+    "Day06 - part1: 6378679666679\n"
 )
 
 
@@ -48,7 +49,7 @@ def test_imports_are_silent(tmp_path: Path) -> None:
             "-c",
             "import aoc2025; import aoc2025.day00; import aoc2025.day01; "
             "import aoc2025.day02; import aoc2025.day03; import aoc2025.day04; "
-            "import aoc2025.day05; import aoc2025.main",
+            "import aoc2025.day05; import aoc2025.day06; import aoc2025.main",
         ],
         cwd=tmp_path,
         capture_output=True,
