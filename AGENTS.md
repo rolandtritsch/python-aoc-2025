@@ -107,18 +107,25 @@ implementation throughout). Run either with `uv run python3`.
 
 `skills/range-membership-cross-check/SKILL.md` distills how to independently
 verify an interval-membership or interval-union solution whose rule is
-"inclusive range, falls into at least one range" using a naive reference that
-scans every raw range for each queried value — no merging and no binary search
-— so the reference is structurally independent of an implementation that merges
-overlapping/adjacent ranges and binary-searches each ID. Use it when a review
-must confirm an inclusive-range membership count on the official sample, the
-real input, and interval boundary banks (empty, no ranges, no queries,
-inclusive bounds, just outside, below/above/in-gap, overlap-once, adjacent-
-touching, contained, single-point, duplicate queries). Runnable Day05
-reference: `skills/range-membership-cross-check/reference/day05_naive_membership.py`
+"inclusive range, falls into at least one range" using independent references
+that share no structural shortcut with an implementation that merges ranges and
+binary-searches or sums merged lengths. Use it when a review must confirm an
+inclusive-range membership count or interval-union total on the official
+sample, the real input, and interval boundary banks (empty, no ranges, no
+queries, inclusive bounds, just outside, below/above/in-gap, overlap-once,
+adjacent-touching, contained, contained-touching-at-endpoint, single-point,
+duplicate queries, many single points, unsorted input). Runnable Day05
+references:
+`skills/range-membership-cross-check/reference/day05_naive_membership.py`
 (part 1, counts available IDs fresh in at least one range; sample 3, real input
-848, 13 boundary banks, naive == implementation throughout). Run it with
-`uv run python3 skills/range-membership-cross-check/reference/day05_naive_membership.py`.
+848, 13 boundary banks, naive == implementation throughout) and
+`skills/range-membership-cross-check/reference/day05_union_sweep.py`
+(part 2, endpoint-sweep union length over the ranges themselves; sample 14,
+real input 334714395325710, 10 interval-union banks, sweep == implementation
+throughout). Run them with
+`uv run python3 skills/range-membership-cross-check/reference/day05_naive_membership.py`
+and
+`uv run python3 skills/range-membership-cross-check/reference/day05_union_sweep.py`.
 
 ## Validation
 

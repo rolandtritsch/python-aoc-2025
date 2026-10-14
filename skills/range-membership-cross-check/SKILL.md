@@ -8,9 +8,10 @@ description: Independently verify an AoC interval-membership or interval-union s
 Use when a puzzle counts or tests items against inclusive numeric ranges that may
 overlap (fresh ingredient IDs in Day05, or any "falls into at least one range"
 rule) and the implementation optimizes the membership test — for example by
-merging overlapping/adjacent ranges and then binary-searching each query. You
-need to confirm the optimized code's count on the official sample and the real
-input without trusting the merge logic or the binary-search indexing.
+merging overlapping/adjacent ranges and then binary-searching each query, or by
+merging and summing interval lengths. You need to confirm the optimized code's
+count on the official sample and the real input without trusting the merge logic
+or the binary-search indexing.
 
 ## Trigger
 
@@ -49,24 +50,39 @@ input without trusting the merge logic or the binary-search indexing.
    ranges counting a duplicated query value once, touching/adjacent ranges
    (3 and 4 both fresh in 1-3, 4-6), a contained range, a single-point range,
    and duplicate query values each counted.
-5. Record the agreement evidence on the review issue: sample total, real-input
+5. For an interval-union part (Day05 part2), use a structurally different
+   sweep-line reference instead: a +1 event at each `first`, a -1 event at
+   each `last + 1`, then a walk over sorted coordinates summing any span where
+   the active count is positive (`union_length_sweep` in
+   `reference/day05_union_sweep.py`). It never merges ranges and never sums
+   merged lengths, so agreement on the real input is independent evidence for
+   the part2 total (sample 14, real 334714395325710). Sweep the same boundary
+   banks: no ranges (0), single point (1), inclusive endpoints, disjoint
+   lengths, overlap-once, adjacent-touching, contained, contained-touching at
+   an endpoint, many single points, and unsorted input.
+6. Record the agreement evidence on the review issue: sample total, real-input
    total, and the boundary banks exercised, each with reference vs
-   implementation value. Label the reference "independent naive range scan" so
-   a future reviewer can tell it apart from the optimized implementation.
+   implementation value. Label the reference "independent naive range scan"
+   (part1) or "independent endpoint sweep" (part2) so a future reviewer can
+   tell it apart from the optimized implementation.
 
 ## Evidence and validation
 
 - `reference/day05_naive_membership.py` is a runnable, self-checking
-  demonstration: `uv run python3 skills/range-membership-cross-check/reference/day05_naive_membership.py`
+  demonstration for part1: `uv run python3 skills/range-membership-cross-check/reference/day05_naive_membership.py`
   prints the sample total (3), the real-input total (848), and the boundary
   banks, asserting naive == implementation throughout. It is read-only against
   the repository and needs no third-party packages.
-- The reference is deliberately independent: it reuses only the parser
-  (`day05.read_database`) for input, never the merge or binary-search logic, so
-  agreement on the real input is independent acceptance-adjacent evidence, not
-  a tautology.
+- `reference/day05_union_sweep.py` is the part2 counterpart, a self-checking
+  endpoint-sweep reference: `uv run python3 skills/range-membership-cross-check/reference/day05_union_sweep.py`
+  prints the sample total (14), the real-input total (334714395325710), and the
+  interval-union boundary banks, asserting sweep == implementation throughout.
+- The references are deliberately independent: they reuse only the parser
+  (`day05.read_database`) for input, never the merge, binary-search, or
+  sum-merged-lengths logic, so agreement on the real input is independent
+  acceptance-adjacent evidence, not a tautology.
 - Do not weaken a solution's own regression tests to make a cross-check appear
-  successful; the reference is an additional oracle, not a replacement for
+  successful; the references are additional oracles, not a replacement for
   `tests/test_dayNN.py`.
 
 ## Stopping conditions
