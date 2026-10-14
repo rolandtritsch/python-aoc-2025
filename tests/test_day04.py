@@ -63,6 +63,45 @@ def test_part1_diagonal_neighbours_counted() -> None:
     assert day04.part1([".@.", "@.@", ".@."]) == 4
 
 
+def test_part2_sample() -> None:
+    assert day04.part2(SAMPLE_GRID) == 43
+
+
+def test_part2_bundled_sample_file() -> None:
+    grid = day04.read_grid(INPUTS / "Day04Test.txt")
+    assert day04.part2(grid) == 43
+
+
+def test_part2_real_input() -> None:
+    grid = day04.read_grid(INPUTS / "Day04.txt")
+    assert day04.part2(grid) == 8713
+
+
+def test_part2_empty_grid() -> None:
+    assert day04.part2([]) == 0
+
+
+def test_part2_single_isolated_roll() -> None:
+    assert day04.part2(["@"]) == 1
+
+
+def test_part2_cascade_unlocks_centre() -> None:
+    # The four cross arms are initially accessible and, once removed, leave the
+    # centre with no neighbours, so it is removed too: five rolls in total.
+    assert day04.part2([".@.", "@@@", ".@."]) == 5
+
+
+def test_part2_full_block_3x3_collapses() -> None:
+    # Corner removal cascades through the block until every roll is gone.
+    assert day04.part2(["@@@", "@@@", "@@@"]) == 9
+
+
+def test_part2_full_block_4x4_only_corners() -> None:
+    # After the four corners are removed, every remaining roll still has exactly
+    # four neighbours, so the cascade stops there.
+    assert day04.part2(["@@@@", "@@@@", "@@@@", "@@@@"]) == 4
+
+
 def test_read_grid_invalid_character(tmp_path: Path) -> None:
     path = tmp_path / "input.txt"
     path.write_text(".x.\n", encoding="utf-8")

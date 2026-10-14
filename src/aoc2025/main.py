@@ -26,3 +26,4 @@ def solve() -> None:
     print(f"Day03 - part2: {day03.part2(banks)}")
     rolls = day04.read_grid(inputs / "Day04.txt")
     print(f"Day04 - part1: {day04.part1(rolls)}")
+    print(f"Day04 - part2: {day04.part2(rolls)}")
