@@ -154,6 +154,21 @@ agrees at 84, malformed worksheets raise ValueError, transpose ==
 implementation throughout). Run it with
 `uv run python3 skills/worksheet-column-block-cross-check/reference/day06_column_block_part2.py`.
 
+`skills/beam-split-cross-check/SKILL.md` distills how to independently verify
+a merge-propagation simulation whose rule is "entities move downward and merge
+when they occupy the same cell/column, and the answer counts discrete splitter
+events" using an explicit per-cell reachability reference that shares no
+helper with an implementation that tracks a per-row column set. Use it when a
+review must confirm a beam-split (or similar merge-propagation) total on the
+official sample, the real input, and edge banks (empty grid, single `S`,
+straight-down no splitter, single splitter, off-path splitter, merged beams
+split once, left/right edge drops of out-of-range spawns, adjacent splitters
+spawn downward not sideways). Runnable Day07 reference:
+`skills/beam-split-cross-check/reference/day07_beam_reachability.py` (sample
+21, real input 1605, 9 boundary banks, per-cell reachability == implementation
+throughout). Run it with
+`uv run python3 skills/beam-split-cross-check/reference/day07_beam_reachability.py`.
+
 ## Validation
 
 ```bash
