@@ -23,7 +23,11 @@ Reconcile an ambiguous response against a saved day page::
 
 The ``--answer`` flag reports whether that answer appears among the page's
 accepted-answer codes, which is the reconciliation signal for an already
-completed part. Exit status is always 0 for a parsed page; callers decide what
+completed part. On a day page the codes appear in document order, part 1's
+accepted answer before part 2's, so ``matchedPart`` (1-based) attributes the
+match to a specific part; this is what distinguishes a genuine part-1 match
+from a cross-part collision (e.g. a submitted part-2 answer on a completed
+day). Exit status is always 0 for a parsed page; callers decide what
 an ``unknown`` or ``auth_required`` verdict means for the cycle.
 """
 
@@ -144,7 +148,14 @@ def main(argv: list[str] | None = None) -> int:
     result = extract(page)
     if args.answer is not None:
         result["answer"] = args.answer
-        result["reconciled"] = args.answer in result["acceptedAnswers"]
+        matched = [
+            index
+            for index, code in enumerate(result["acceptedAnswers"])
+            if code == args.answer
+        ]
+        result["reconciled"] = bool(matched)
+        if matched:
+            result["matchedPart"] = matched[0] + 1
     print(json.dumps(result, sort_keys=True))
     return 0
 

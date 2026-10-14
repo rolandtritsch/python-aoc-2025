@@ -64,8 +64,9 @@ guidance here. Company monitoring tooling stays in the company package.
 accepted-answer codes for reconciling ambiguous submission responses; see
 `skills/verdict-reconciliation/SKILL.md`. It reports `completed_day` for an
 authenticated day page that marks both parts complete, including when that
-marker sits outside the article. Add new helpers only after repeated
-puzzle or workflow requirements justify them.
+marker sits outside the article, and `matchedPart` (1-based) attributing an
+`--answer` match to part 1 or part 2 by accepted-code document order. Add new
+helpers only after repeated puzzle or workflow requirements justify them.
 
 ## Validation
 

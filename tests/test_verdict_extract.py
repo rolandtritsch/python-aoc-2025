@@ -74,6 +74,17 @@ def test_reconcile_matching_answer() -> None:
     assert result["reconciled"] is True
 
 
+def test_reconcile_attributes_part_one_match() -> None:
+    result = extract("day_page_complete.html", answer=1129)
+    assert result["matchedPart"] == 1
+
+
+def test_reconcile_attributes_part_two_match() -> None:
+    result = extract("day_page_complete.html", answer=6638)
+    assert result["matchedPart"] == 2
+
+
 def test_reconcile_nonmatching_answer() -> None:
     result = extract("day_page_complete.html", answer=9999)
     assert result["reconciled"] is False
+    assert "matchedPart" not in result

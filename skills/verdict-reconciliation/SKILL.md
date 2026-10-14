@@ -53,9 +53,15 @@ attempt whose acceptance was reconciled from an authenticated day page.
    `completed_day` even though that marker sits outside the article, so the
    authoritative page is never reported as `unknown`. Absence of a code is not
    rejection.
-4. Record the verdict, the verbatim response wording, the `acceptedAnswers`
-   codes, and the reconciliation result on the issue. Rate-limit responses
-   require a wait before any retry; do not loop on them.
+4. On a completed day page the accepted codes appear in document order — part
+   1's answer first, part 2's second — so the helper also reports `matchedPart`
+   (1-based) when `--answer` matches. Attribute the match to the part under
+   review: `matchedPart: 1` for a part-1 attempt, `matchedPart: 2` for part 2.
+   `reconciled: true` alone is not enough when both parts are complete, because
+   a submitted answer could collide with the other part's accepted code.
+5. Record the verdict, the verbatim response wording, the `acceptedAnswers`
+   codes, the `matchedPart`, and the reconciliation result on the issue.
+   Rate-limit responses require a wait before any retry; do not loop on them.
 
 ## Evidence and validation
 
