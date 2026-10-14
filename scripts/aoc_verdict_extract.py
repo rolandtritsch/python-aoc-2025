@@ -6,7 +6,10 @@ AoC submission responses and day pages are saved as HTML (e.g. the submitter's
 verdict classification and pulls out every ``Your puzzle answer was <code>N``
 accepted-answer code, so an ambiguous "already completed / wrong level"
 response can be reconciled against the authenticated day page without guessing.
-Only the Python standard library is used.
+A day page that marks the whole day complete (the ``day-success`` "Both parts
+of this puzzle are complete" marker) is reported as ``completed_day`` even
+though that marker sits outside the article. Only the Python standard library
+is used.
 
 Examples
 --------
@@ -35,6 +38,11 @@ from pathlib import Path
 
 ACCEPTED_ANSWER = re.compile(
     r"Your\s+puzzle\s+answer\s+was\s*<code>\s*(\d+)\s*</code>", re.IGNORECASE
+)
+
+DAY_COMPLETED = re.compile(
+    r"class\s*=\s*\"day-success\"|both\s+parts\s+of\s+this\s+puzzle\s+are\s+complete",
+    re.IGNORECASE,
 )
 
 
@@ -91,14 +99,28 @@ def classify(article_text: str) -> str:
     return "unknown"
 
 
+def day_completed(page: str) -> bool:
+    """Return whether a saved page marks its whole day as completed.
+
+    AoC marks a completed day outside the article with a ``day-success``
+    paragraph whose text includes "Both parts of this puzzle are complete".
+    These markers appear only on the authenticated day page, never on a
+    submission POST response.
+    """
+    return DAY_COMPLETED.search(page) is not None
+
+
 def extract(page: str) -> dict[str, object]:
     """Return verdict, article text, and accepted-answer codes from saved HTML."""
     parser = ArticleParser()
     parser.feed(page)
     article = parser.text()
     accepted = [int(value) for value in ACCEPTED_ANSWER.findall(page)]
+    verdict = classify(article)
+    if verdict == "unknown" and day_completed(page):
+        verdict = "completed_day"
     return {
-        "verdict": classify(article),
+        "verdict": verdict,
         "article": article,
         "acceptedAnswers": accepted,
     }

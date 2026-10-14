@@ -64,6 +64,11 @@ def test_extract_day_page_answers() -> None:
     assert result["acceptedAnswers"] == [1129, 6638]
 
 
+def test_extract_completed_day_page() -> None:
+    result = extract("day_page_complete.html")
+    assert result["verdict"] == "completed_day"
+
+
 def test_reconcile_matching_answer() -> None:
     result = extract("day_page_complete.html", answer=1129)
     assert result["reconciled"] is True

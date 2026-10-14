@@ -62,7 +62,9 @@ guidance here. Company monitoring tooling stays in the company package.
 
 `scripts/aoc_verdict_extract.py` classifies saved AoC answer HTML and extracts
 accepted-answer codes for reconciling ambiguous submission responses; see
-`skills/verdict-reconciliation/SKILL.md`. Add new helpers only after repeated
+`skills/verdict-reconciliation/SKILL.md`. It reports `completed_day` for an
+authenticated day page that marks both parts complete, including when that
+marker sits outside the article. Add new helpers only after repeated
 puzzle or workflow requirements justify them.
 
 ## Validation

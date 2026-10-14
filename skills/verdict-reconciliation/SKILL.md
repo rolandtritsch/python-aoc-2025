@@ -36,7 +36,7 @@ attempt whose acceptance was reconciled from an authenticated day page.
    JSON object with `verdict`, `article`, and `acceptedAnswers`. Verdicts:
    `accepted`, `rejected`, `rejected_too_high`, `rejected_too_low`,
    `already_completed_or_wrong_level`, `rate_limited`, `auth_required`,
-   `unknown`.
+   `completed_day`, `unknown`.
 3. `already_completed_or_wrong_level`, login pages, network failures, and
    unrecognized responses require reconciliation, never blind acceptance or
    blind rejection. Fetch the authenticated day page, save it, and run the
@@ -48,7 +48,11 @@ attempt whose acceptance was reconciled from an authenticated day page.
    ```
 
    A matching accepted code plus a complete-parts page is authoritative
-   historical acceptance for that part. Absence of a code is not rejection.
+   historical acceptance for that part. A day page that shows the
+   `day-success` "Both parts of this puzzle are complete" marker is classified
+   `completed_day` even though that marker sits outside the article, so the
+   authoritative page is never reported as `unknown`. Absence of a code is not
+   rejection.
 4. Record the verdict, the verbatim response wording, the `acceptedAnswers`
    codes, and the reconciliation result on the issue. Rate-limit responses
    require a wait before any retry; do not loop on them.
