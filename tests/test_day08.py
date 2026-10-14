@@ -78,6 +78,35 @@ def test_part1_too_few_boxes_raises() -> None:
         day08.part1([day08.Box(0, 0, 0), day08.Box(1, 1, 1)])
 
 
+def test_part2_sample() -> None:
+    assert day08.part2(SAMPLE_BOXES) == 25272
+
+
+def test_part2_bundled_sample_file() -> None:
+    boxes = day08.read_boxes(INPUTS / "Day08Test.txt")
+    assert day08.part2(boxes) == 25272
+
+
+def test_part2_real_input() -> None:
+    boxes = day08.read_boxes(INPUTS / "Day08.txt")
+    assert day08.part2(boxes) == 6083499488
+
+
+def test_part2_two_boxes_single_connection() -> None:
+    boxes = [day08.Box(3, 7, 9), day08.Box(5, 1, 2)]
+    assert day08.part2(boxes) == 3 * 5
+
+
+def test_part2_three_boxes_finalises_outer_pair() -> None:
+    boxes = [day08.Box(0, 0, 0), day08.Box(1, 0, 0), day08.Box(2, 0, 0)]
+    assert day08.part2(boxes) == 1 * 2
+
+
+def test_part2_too_few_boxes_raises() -> None:
+    with pytest.raises(ValueError, match="at least two"):
+        day08.part2([day08.Box(0, 0, 0)])
+
+
 def test_read_boxes_empty_filename() -> None:
     with pytest.raises(ValueError, match="filename"):
         day08.read_boxes("")

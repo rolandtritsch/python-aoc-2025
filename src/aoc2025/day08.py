@@ -3,9 +3,10 @@
 Junction boxes sit at 3D ``(x, y, z)`` positions. Connecting two boxes lets
 electricity flow between them, placing them in the same circuit. The Elves walk
 all pairs in order of increasing straight-line (Euclidean) distance and connect
-a pair unless its two boxes are already in the same circuit, stopping after a
-fixed number of closest pairs have been examined. Part 1 then multiplies the
-sizes of the three largest circuits.
+a pair unless its two boxes are already in the same circuit. Part 1 stops after
+a fixed number of closest pairs have been examined and multiplies the sizes of
+the three largest circuits; part 2 keeps connecting until every box is in one
+circuit and multiplies the X coordinates of the pair that completed it.
 """
 
 from collections.abc import Sequence
@@ -99,3 +100,52 @@ def part1(boxes: Sequence[Box], connections: int = 1000) -> int:
     for circuit in sizes[-3:]:
         result *= circuit
     return result
+
+
+def _final_connection(boxes: Sequence[Box]) -> tuple[int, int]:
+    """Return the boxes whose connection first joins every box into one circuit.
+
+    Pops all pairs in increasing squared distance (indexes break ties, matching
+    the heap ordering of ``_circuit_sizes``) and unions each pair whose boxes are
+    in different circuits until a single circuit remains. Returns the indices of
+    the pair that produced that final merge. Runs in O(N^2 log N) time and
+    O(N^2) space for ``N`` boxes, since every pair is materialized in the heap.
+    """
+    n = len(boxes)
+    parent = list(range(n))
+    size = [1] * n
+
+    def find(index: int) -> int:
+        while parent[index] != index:
+            parent[index] = parent[parent[index]]
+            index = parent[index]
+        return index
+
+    heap: list[tuple[int, int, int]] = []
+    for i in range(n):
+        for j in range(i + 1, n):
+            heappush(heap, (_squared_distance(boxes[i], boxes[j]), i, j))
+    components = n
+    while heap:
+        _, i, j = heappop(heap)
+        root_i, root_j = find(i), find(j)
+        if root_i != root_j:
+            parent[root_i] = root_j
+            size[root_j] += size[root_i]
+            components -= 1
+            if components == 1:
+                return i, j
+    raise ValueError("boxes cannot form a single circuit")
+
+
+def part2(boxes: Sequence[Box]) -> int:
+    """Return the product of the X coordinates of the final pair connected.
+
+    Connect the closest pairs of boxes until every box belongs to one circuit,
+    then multiply the X coordinates of the two boxes whose connection first
+    formed that single circuit. Rejects fewer than two boxes.
+    """
+    if len(boxes) < 2:
+        raise ValueError("at least two boxes are required")
+    i, j = _final_connection(boxes)
+    return boxes[i].x * boxes[j].x

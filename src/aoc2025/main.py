@@ -39,3 +39,4 @@ def solve() -> None:
     print(f"Day07 - part2: {day07.part2(manifold)}")
     boxes = day08.read_boxes(inputs / "Day08.txt")
     print(f"Day08 - part1: {day08.part1(boxes)}")
+    print(f"Day08 - part2: {day08.part2(boxes)}")

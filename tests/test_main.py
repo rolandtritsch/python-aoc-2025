@@ -27,6 +27,7 @@ EXPECTED = (
     "Day07 - part1: 1605\n"
     "Day07 - part2: 29893386035180\n"
     "Day08 - part1: 90036\n"
+    "Day08 - part2: 6083499488\n"
 )
 
 
