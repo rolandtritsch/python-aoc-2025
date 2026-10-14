@@ -29,3 +29,4 @@ def solve() -> None:
     print(f"Day04 - part2: {day04.part2(rolls)}")
     database = day05.read_database(inputs / "Day05.txt")
     print(f"Day05 - part1: {day05.part1(database.ranges, database.available)}")
+    print(f"Day05 - part2: {day05.part2(database.ranges)}")

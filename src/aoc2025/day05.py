@@ -3,7 +3,8 @@
 The Cafeteria database lists inclusive fresh ingredient ID ranges (one
 ``first-last`` pair per line), a blank line, and then the available ingredient
 IDs (one per line). An ID is fresh when it falls into at least one range, and
-the ranges may overlap. Part 1 counts how many of the available IDs are fresh.
+the ranges may overlap. Part 1 counts how many of the available IDs are fresh;
+part 2 counts every distinct ID the ranges themselves mark as fresh.
 """
 
 import bisect
@@ -87,6 +88,19 @@ def _merge_ranges(ranges: Sequence[IdRange]) -> list[IdRange]:
         else:
             merged.append(current)
     return merged
+
+
+def part2(ranges: Sequence[IdRange]) -> int:
+    """Return how many ingredient IDs the fresh ID ranges consider fresh.
+
+    An ingredient ID is fresh when it falls into at least one inclusive range,
+    and each fresh ID is counted once regardless of how many ranges cover it.
+    Overlapping and adjacent ranges are merged, and the answer is the sum of
+    the merged intervals' lengths. Runs in O(n log n) time and O(n) space for
+    ``n`` ranges.
+    """
+    merged = _merge_ranges(ranges)
+    return sum(interval.last - interval.first + 1 for interval in merged)
 
 
 def part1(ranges: Sequence[IdRange], available: Sequence[int]) -> int:

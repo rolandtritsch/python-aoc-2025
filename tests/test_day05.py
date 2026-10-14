@@ -34,6 +34,49 @@ def test_part1_real_input() -> None:
     assert day05.part1(database.ranges, database.available) == 848
 
 
+def test_part2_sample() -> None:
+    assert day05.part2(SAMPLE_RANGES) == 14
+
+
+def test_part2_bundled_sample_file() -> None:
+    database = day05.read_database(INPUTS / "Day05Test.txt")
+    assert day05.part2(database.ranges) == 14
+
+
+def test_part2_real_input() -> None:
+    database = day05.read_database(INPUTS / "Day05.txt")
+    assert day05.part2(database.ranges) == 334714395325710
+
+
+def test_part2_no_ranges() -> None:
+    assert day05.part2([]) == 0
+
+
+def test_part2_single_point_range() -> None:
+    assert day05.part2([IdRange(7, 7)]) == 1
+
+
+def test_part2_inclusive_bounds_count_endpoints() -> None:
+    assert day05.part2([IdRange(3, 5)]) == 3
+
+
+def test_part2_disjoint_ranges_sum_lengths() -> None:
+    assert day05.part2([IdRange(1, 3), IdRange(10, 12)]) == 6
+
+
+def test_part2_overlapping_ranges_count_once() -> None:
+    # 16-20 and 12-18 overlap on 16, 17, 18; total distinct fresh IDs is 9.
+    assert day05.part2([IdRange(16, 20), IdRange(12, 18)]) == 9
+
+
+def test_part2_adjacent_ranges_merge_without_double_count() -> None:
+    assert day05.part2([IdRange(1, 3), IdRange(4, 6)]) == 6
+
+
+def test_part2_contained_range_adds_nothing() -> None:
+    assert day05.part2([IdRange(10, 20), IdRange(12, 15)]) == 11
+
+
 def test_part1_no_ranges() -> None:
     assert day05.part1([], [1, 5, 8]) == 0
 
