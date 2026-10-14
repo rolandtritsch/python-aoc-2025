@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from aoc2025 import day00, day01, day02, day03, day04, day05, day06
+from aoc2025 import day00, day01, day02, day03, day04, day05, day06, day07
 
 
 def solve() -> None:
@@ -34,3 +34,5 @@ def solve() -> None:
     print(f"Day06 - part1: {day06.part1(worksheet)}")
     grid = day06.read_grid(inputs / "Day06.txt")
     print(f"Day06 - part2: {day06.part2(grid)}")
+    manifold = day07.read_grid(inputs / "Day07.txt")
+    print(f"Day07 - part1: {day07.part1(manifold)}")
