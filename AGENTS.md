@@ -163,11 +163,21 @@ review must confirm a beam-split (or similar merge-propagation) total on the
 official sample, the real input, and edge banks (empty grid, single `S`,
 straight-down no splitter, single splitter, off-path splitter, merged beams
 split once, left/right edge drops of out-of-range spawns, adjacent splitters
-spawn downward not sideways). Runnable Day07 reference:
+spawn downward not sideways). Runnable Day07 part1 reference:
 `skills/beam-split-cross-check/reference/day07_beam_reachability.py` (sample
 21, real input 1605, 9 boundary banks, per-cell reachability == implementation
-throughout). Run it with
-`uv run python3 skills/beam-split-cross-check/reference/day07_beam_reachability.py`.
+throughout). The same skill covers Day07 part2's many-worlds timeline count
+(entities never merge: two timelines are distinct even when they reach the
+same cell, so the count multiplies through coinciding splitters) with two
+independent references in `reference/day07_timeline_count.py`: an explicit
+per-path timeline enumeration for the sample and boundary banks (never merges
+coinciding paths), and a bottom-up memoized cell recurrence that verifies the
+real-input total (sample 40, real input 29893386035180, 10 boundary banks
+including converging-timelines-stay-distinct and coincide-at-splitter-stay-
+distinct, enumerated == memoized == implementation throughout). Run them with
+`uv run python3 skills/beam-split-cross-check/reference/day07_beam_reachability.py`
+and
+`uv run python3 skills/beam-split-cross-check/reference/day07_timeline_count.py`.
 
 ## Validation
 
