@@ -97,9 +97,13 @@ an implementation that guards each neighbour coordinate. Use it when a review
 must confirm a neighbour-threshold count on the official sample, the real
 input, and degenerate boundary banks (empty, single cell, full block, exactly-
 threshold exclusion, diagonal-only, single row/column). Runnable Day04
-reference: `skills/grid-neighbour-counting/reference/day04_padded_grid.py`
+references: `skills/grid-neighbour-counting/reference/day04_padded_grid.py`
 (part 1, counts rolls with fewer than four occupied neighbours; sample 13,
-real input 1356, 10 boundary grids, padded == implementation throughout).
+real input 1356, 10 boundary grids, padded == implementation throughout) and
+`skills/grid-neighbour-counting/reference/day04_cascade_removal.py` (part 2,
+synchronous round-removal of accessible rolls mirroring the statement's worked
+example; sample 43, real input 8713, the same boundary grids, round-removal ==
+implementation throughout). Run either with `uv run python3`.
 
 ## Validation
 

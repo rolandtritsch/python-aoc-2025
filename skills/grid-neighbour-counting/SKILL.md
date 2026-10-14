@@ -1,6 +1,6 @@
 ---
 name: grid-neighbour-counting
-description: Independently verify an AoC grid-counting solution against a padded-grid reference that removes bounds checks, covering the official sample, the real input, and neighbour-count boundary banks.
+description: Independently verify an AoC grid-counting or cascade-removal solution against a padded-grid reference or a synchronous round-removal reference that avoids the implementation's structural shortcuts, covering the official sample, the real input, and neighbour-count boundary banks.
 ---
 
 # Grid neighbour counting
@@ -10,11 +10,16 @@ their adjacent positions (orthogonal plus diagonal, or orthogonal only), and you
 need to confirm the implementation's count on the official sample and the real
 input without trusting its bounds handling or off-by-one loops. Typical triggers
 are grid puzzles with rules like "accessible when fewer than N neighbours" or a
-flickering/occupancy/adjacency rule over the eight surrounding cells.
+flickering/occupancy/adjacency rule over the eight surrounding cells. The same
+rule also drives cascade puzzles where accessible cells are removed in rounds
+until none remain (Day04 part2); those need a second reference built from the
+synchronous round-removal reading of the statement.
 
 ## Trigger
 
 - A solution counts cells whose neighbour count passes a threshold.
+- A solution repeatedly removes threshold-passing cells and counts the total
+  removed before none remain (a cascade over the same neighbour rule).
 - The reviewer must independently confirm the real-input total (not just the
   official sample).
 - Boundary handling (edges, corners, single row/column) is easy to get wrong and
@@ -36,33 +41,52 @@ flickering/occupancy/adjacency rule over the eight surrounding cells.
    implementation that guards each neighbour coordinate. For Day04 part1 the
    reference is `padded_count` in `reference/day04_padded_grid.py`: count rolls
    whose eight neighbours contain fewer than four rolls.
-2. Run both the reference and the implementation on the official sample. They
+2. For a cascade part (Day04 part2), write a second reference that simulates the
+   statement's worked example directly: at each pass find every currently
+   accessible cell and remove them all in one synchronous round, then repeat
+   until none are accessible. This is `round_removal_count` in
+   `reference/day04_cascade_removal.py`. It recomputes accessibility from
+   scratch each round over the live grid instead of maintaining per-cell
+   adjacency counts and a removal queue, so it shares no structural shortcut
+   with the queue-based implementation. Because removal only lowers neighbour
+   counts, accessibility is monotone and the final total is order-independent,
+   so the synchronous reference and any removal order agree on every grid.
+3. Run the reference(s) and the implementation on the official sample. They
    must agree with each other and with the statement's stated sample answer
-   (Day04 part1: 13). Disagreement means one of them misreads the rule.
-3. Run both on the real input and require exact agreement on the total (Day04
-   part1: 1356). The real grid is only 138x138, so the padded reference is
-   tractable and verifies the total independently, unlike intractable
-   combinatorial brute forces.
-4. Check boundary banks where the rule is easy to get wrong: an empty grid
-   (0), a single isolated cell (1), a full block (only the corners stay below
-   the threshold; 3x3 and 4x4 both give 4), a cell with exactly-threshold
+   (Day04 part1: 13; Day04 part2: 43). Disagreement means one of them misreads
+   the rule.
+4. Run both on the real input and require exact agreement on the total (Day04
+   part1: 1356; Day04 part2: 8713). The real grid is only 138x138, so both
+   references are tractable and verify the total independently, unlike
+   intractable combinatorial brute forces.
+5. Check boundary banks where the rule is easy to get wrong: an empty grid
+   (0), a single isolated cell (1), a full block (part1: only the corners stay
+   below the threshold; 3x3 and 4x4 both give 4; part2: the 3x3 block cascades
+   to 9, the 4x4 block stops after its 4 corners), a cell with exactly-threshold
    neighbours that must be excluded, a diagonal-only arrangement (diagonals are
    counted), and degenerate shapes (single row, single column, a lone middle
-   cell, a plus/cross).
-5. Record the agreement evidence on the review issue: sample total, real-input
+   cell, a plus/cross that cascades to 5).
+6. Record the agreement evidence on the review issue: sample total, real-input
    total, and the boundary banks exercised, each with reference vs
-   implementation value. Label the reference "independent padded-grid
-   brute-force" so a future reviewer can tell it apart from the implementation.
+   implementation value. Label the references "independent padded-grid
+   brute-force" and "independent synchronous round-removal" so a future
+   reviewer can tell them apart from the implementation.
 
 ## Evidence and validation
 
 - `reference/day04_padded_grid.py` is a runnable, self-checking demonstration:
-  `python3 skills/grid-neighbour-counting/reference/day04_padded_grid.py`
+  `uv run python3 skills/grid-neighbour-counting/reference/day04_padded_grid.py`
   prints the sample total (13), the real-input total (1356), and the boundary
   grids, asserting padded == implementation throughout. It is read-only against
   the repository and needs no third-party packages.
-- The reference's padding approach is deliberately independent: no shared
-  helper, no reuse of the implementation's bounds checks, so agreement on the
+- `reference/day04_cascade_removal.py` is the Day04 part2 analogue:
+  `uv run python3 skills/grid-neighbour-counting/reference/day04_cascade_removal.py`
+  prints the sample total (43), the real-input total (8713), and the same
+  boundary banks, asserting round-removal == implementation throughout. Its
+  synchronous rounds mirror the statement's worked example (13 + 12 + 7 + 5 +
+  2 + 1 + 1 + 1 + 1 = 43).
+- Both references are deliberately independent: no shared helper, no reuse of
+  the implementation's bounds checks or queue bookkeeping, so agreement on the
   real input is independent evidence, not a tautology.
 - Do not weaken a solution's own regression tests to make a cross-check appear
   successful; the reference is an additional oracle, not a replacement for
