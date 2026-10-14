@@ -127,6 +127,23 @@ throughout). Run them with
 and
 `uv run python3 skills/range-membership-cross-check/reference/day05_union_sweep.py`.
 
+`skills/worksheet-column-block-cross-check/SKILL.md` distills how to
+independently verify a column-worksheet parser whose rule is "vertical stack
+of numbers with the operation symbol below, problems separated by a full
+column of only spaces" using a pure character-column reference that slices the
+padded grid between full-space separator columns and reads numbers by character
+position only — never splitting a line on whitespace and sharing no helper
+with an implementation that takes the i-th token of every line. Use it when a
+review must confirm a whitespace-split worksheet parser's grand total on the
+official sample, the real input, and alignment boundary banks (right- and
+left-aligned single problems, single number row, mixed operators, wide next to
+narrow, trailing spaces, many rows, adjacent single digits) plus the
+separator-broken invalid bank. Runnable Day06 reference:
+`skills/worksheet-column-block-cross-check/reference/day06_column_block.py`
+(sample 4277556, real input 6378679666679, 8 boundary banks, invalid bank
+raises ValueError, column-block == implementation throughout). Run it with
+`uv run python3 skills/worksheet-column-block-cross-check/reference/day06_column_block.py`.
+
 ## Validation
 
 ```bash
