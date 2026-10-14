@@ -11,6 +11,8 @@ Scala Day00 skeleton at commit `da340d8357f04e69c0ee68f26d9cc9dd8857f840`.
 - `tests/`: per-day tests and runner integration tests.
 - `inputs/`: full and sample inputs, named `Day00.txt` and `Day00Test.txt`.
 - `problems/`: written problem statements, starting with `Day00.md`.
+- `scripts/`: reusable deterministic helpers for the AoC workflow.
+- `skills/`: distilled review lessons, one directory per skill.
 - `assets/`: the tree image reused from the Scala blueprint.
 - `hooks/`: the pre-push quality check.
 - `.github/workflows/ci.yml`: checks, generated API docs, and Pages deployment.
@@ -57,6 +59,11 @@ and fetch only the authorized day/part. Credentials stay outside this repository
 Read applicable `skills/*/SKILL.md` before repeating work. Reviewed reusable
 improvements belong in this repository's `skills/` and `scripts/`, with discovery
 guidance here. Company monitoring tooling stays in the company package.
+
+`scripts/aoc_verdict_extract.py` classifies saved AoC answer HTML and extracts
+accepted-answer codes for reconciling ambiguous submission responses; see
+`skills/verdict-reconciliation/SKILL.md`. Add new helpers only after repeated
+puzzle or workflow requirements justify them.
 
 ## Validation
 
