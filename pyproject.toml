@@ -1,0 +1,41 @@
+[project]
+name = "python-aoc-2025"
+version = "0.1.0"
+description = "Advent of Code 2025 solutions in Python, starting with the Day00 Fibonacci template"
+readme = "README.md"
+authors = [
+    { name = "Roland Tritsch", email = "roland@tritsch.email" }
+]
+requires-python = ">=3.13.7"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = []
+
+[project.scripts]
+solve = "aoc2025.main:solve"
+
+[build-system]
+requires = ["uv_build>=0.11.1,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "aoc2025"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--import-mode=importlib --cov=aoc2025 --cov-branch --cov-report=term-missing --cov-fail-under=80"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[dependency-groups]
+dev = [
+    "pdoc>=16.0.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.0",
+]
