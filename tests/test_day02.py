@@ -81,6 +81,68 @@ def test_is_repeated_twice_negative() -> None:
         day02.is_repeated_twice(-1)
 
 
+def test_part2_sample() -> None:
+    assert day02.part2(SAMPLE_RANGES) == 4174379265
+
+
+def test_part2_bundled_sample_file() -> None:
+    ranges = day02.read_ranges(INPUTS / "Day02Test.txt")
+    assert day02.part2(ranges) == 4174379265
+
+
+def test_part2_real_input() -> None:
+    ranges = day02.read_ranges(INPUTS / "Day02.txt")
+    assert day02.part2(ranges) == 53481866137
+
+
+def test_part2_no_ranges() -> None:
+    assert day02.part2([]) == 0
+
+
+def test_part2_single_repeated_id() -> None:
+    assert day02.part2([IdRange(123123123, 123123123)]) == 123123123
+
+
+def test_part2_single_digit_repeated_many_times() -> None:
+    assert day02.part2([IdRange(1111111, 1111111)]) == 1111111
+
+
+@pytest.mark.parametrize(
+    ("number", "expected"),
+    [
+        (11, True),
+        (22, True),
+        (99, True),
+        (111, True),
+        (999, True),
+        (1010, True),
+        (6464, True),
+        (123123, True),
+        (123123123, True),
+        (12341234, True),
+        (1212121212, True),
+        (1111111, True),
+        (1188511885, True),
+        (0, False),
+        (5, False),
+        (10, False),
+        (12, False),
+        (101, False),
+        (998, False),
+        (1001, False),
+        (121, False),
+        (1010101, False),
+    ],
+)
+def test_is_repeated_at_least_twice(number: int, expected: bool) -> None:
+    assert day02.is_repeated_at_least_twice(number) is expected
+
+
+def test_is_repeated_at_least_twice_negative() -> None:
+    with pytest.raises(ValueError, match="nonnegative"):
+        day02.is_repeated_at_least_twice(-1)
+
+
 def test_read_ranges_empty_filename() -> None:
     with pytest.raises(ValueError, match="filename"):
         day02.read_ranges("")

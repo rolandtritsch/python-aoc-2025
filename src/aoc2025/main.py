@@ -20,3 +20,4 @@ def solve() -> None:
     print(f"Day01 - part2: {day01.part2(rotations)}")
     ranges = day02.read_ranges(inputs / "Day02.txt")
     print(f"Day02 - part1: {day02.part1(ranges)}")
+    print(f"Day02 - part2: {day02.part2(ranges)}")

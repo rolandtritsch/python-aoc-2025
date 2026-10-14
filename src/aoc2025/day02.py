@@ -3,7 +3,9 @@
 The puzzle input is a single comma-separated line of inclusive ID ranges, each
 written ``first-last``. Part 1 defines an invalid ID as one whose decimal form
 is some nonempty digit sequence repeated exactly twice (``55``, ``6464``,
-``123123``); the answer is the sum of every invalid ID appearing in any range.
+``123123``); Part 2 relaxes that to a sequence repeated at least twice
+(``123123123``, ``1111111``). The answer is the sum of every invalid ID
+appearing in any range.
 """
 
 from collections.abc import Sequence
@@ -67,6 +69,25 @@ def is_repeated_twice(number: int) -> bool:
     return text[:half] == text[half:]
 
 
+def is_repeated_at_least_twice(number: int) -> bool:
+    """Return whether ``number`` is a digit sequence repeated at least twice.
+
+    The decimal form must equal some nonempty prefix repeated ``k`` times for
+    an integer ``k >= 2``. This subsumes the exactly-twice case and also
+    accepts ``123123123`` (``123`` three times) and ``1111111`` (``1`` seven
+    times). Negative numbers raise ValueError. Runs in O(d^2) time for a
+    number with ``d`` digits.
+    """
+    if number < 0:
+        raise ValueError("number must be nonnegative")
+    text = str(number)
+    length = len(text)
+    for divisor in range(1, length // 2 + 1):
+        if length % divisor == 0 and text == text[:divisor] * (length // divisor):
+            return True
+    return False
+
+
 def part1(ranges: Sequence[IdRange]) -> int:
     """Return the sum of all invalid IDs appearing across ``ranges``.
 
@@ -78,5 +99,21 @@ def part1(ranges: Sequence[IdRange]) -> int:
     for first, last in ranges:
         for number in range(first, last + 1):
             if is_repeated_twice(number):
+                total += number
+    return total
+
+
+def part2(ranges: Sequence[IdRange]) -> int:
+    """Return the sum of all invalid IDs appearing across ``ranges``.
+
+    Each range is scanned inclusively and every ID whose decimal form is a
+    digit sequence repeated at least twice is added to the total. Runs in
+    O(T * d) time, where ``T`` is the total number of IDs across all ranges
+    and ``d`` is the maximum number of digits in any ID.
+    """
+    total = 0
+    for first, last in ranges:
+        for number in range(first, last + 1):
+            if is_repeated_at_least_twice(number):
                 total += number
     return total
