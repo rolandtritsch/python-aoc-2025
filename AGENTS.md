@@ -76,6 +76,13 @@ hand-copying command output: `python3 scripts/aoc_repo_check.py [--repo DIR]`
 (defaults to `$AOC_REPO_DIR` or the current directory). It is read-only and
 exits nonzero if any check fails or the working tree is dirty or diverged.
 
+`skills/brute-force-cross-check/SKILL.md` distills how to verify an optimized
+solution (suffix-max, sliding window, greedy rule) against a tiny independent
+brute-force reference on the official sample, the real input, and boundary
+banks. Use it when a review must independently confirm an optimized
+implementation's real-input total; its runnable Day03 example is
+`skills/brute-force-cross-check/reference/day03_pair_joltage.py`.
+
 ## Validation
 
 ```bash
