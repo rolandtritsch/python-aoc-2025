@@ -36,6 +36,28 @@ solution module, tests, and an explicit runner entry. Add reusable utilities onl
 after repeated puzzle requirements justify them. No grid/search framework or
 Paperclip runtime configuration belongs in this skeleton.
 
+## Company operation
+
+The separate **AoC Solver 2025 Python** company uses this repository as its
+canonical solution checkout. Day00 stays the practice template. The company
+authorizes one day/part at a time, through Day12, with review before advancement.
+
+Use `src/aoc2025/dayNN.py`, `tests/test_dayNN.py`, `problems/DayNNProblem.txt`,
+`inputs/DayNN.txt`, and `inputs/DayNNTest.txt` for subsequent days. Name active
+part tests `test_part1_*` and `test_part2_*` so pytest JUnit output supplies
+unambiguous per-part evidence. Sample, edge, and real-input assertions remain
+meaningful; skipped tests and tests for another part do not establish completion.
+Print only implemented runner parts as `DayNN - partP: <answer>`. Do not fabricate
+numeric placeholders for unimplemented parts.
+
+Personal inputs and samples are tracked and pushed by explicit owner choice,
+matching the Scala repository. Do not add ignore rules for inputs. Cache material
+and fetch only the authorized day/part. Credentials stay outside this repository.
+
+Read applicable `skills/*/SKILL.md` before repeating work. Reviewed reusable
+improvements belong in this repository's `skills/` and `scripts/`, with discovery
+guidance here. Company monitoring tooling stays in the company package.
+
 ## Validation
 
 ```bash
