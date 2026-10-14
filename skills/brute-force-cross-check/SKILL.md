@@ -31,18 +31,27 @@ optimized algorithm's insight.
 1. Write a naive reference in a scratch file (or an inline `python3 -c`) that
    enumerates every candidate directly from the statement. For Day03 part1 the
    reference is `max(d[i] * 10 + d[j])` over every `i < j` in each bank
-   (O(n^2)); see `reference/day03_pair_joltage.py`. Keep it independent: no
-   shared helper, no reuse of the optimized code's structural shortcut.
+   (O(n^2)); see `reference/day03_pair_joltage.py`. For Day03 part2 the
+   reference enumerates every `count`-element subsequence via
+   `itertools.combinations`; see `reference/day03_k_digit_subsequence.py`.
+   Keep it independent: no shared helper, no reuse of the optimized code's
+   structural shortcut.
 2. Run both the reference and the optimized function on the official sample.
    They must agree with each other and with the statement's stated sample answer
-   (Day03 part1: 357). Disagreement means one of them misreads the rule.
-3. Run both on the real input and require exact agreement on the total. Record
-   both numbers. Agreement is strong but not proof: identical bugs can
-   coincidentally agree, so also confirm a few boundary banks by hand.
+   (Day03 part1: 357; Day03 part2: 3121910778619). Disagreement means one of
+   them misreads the rule.
+3. Run both on the real input and require exact agreement on the total, but only
+   when the reference stays tractable (Day03 banks are 100 digits, so the
+   C(100,12) brute force cannot finish). Record both numbers. Agreement is
+   strong but not proof: identical bugs can coincidentally agree, so also
+   confirm a few boundary banks by hand.
 4. Check boundary banks where the rule is easy to get wrong, such as an
    ascending sequence (`123456789 -> 89`), descending (`987654321 -> 98`),
    equal digits (`55555 -> 55`), a two-digit bank (`12 -> 12`), and a
-   short/non-digit bank that the parser must reject.
+   short/non-digit bank that the parser must reject. For a `count > 1` puzzle
+   also check an exact-length bank (`987654321111` stays unchanged), a
+   leading-small bank (`19999999999999 -> 999999999999`), and a
+   `count <= 0` / too-short bank that must raise.
 5. Record the agreement evidence on the review issue: sample total, real-input
    total, and the edge cases exercised, each with the reference vs optimized
    value. Label the reference "independent O(n^2) brute-force" or the like so a
@@ -55,6 +64,12 @@ optimized algorithm's insight.
   prints the sample total (357), the real-input total (17207), and
   the boundary banks, asserting brute-force == optimized throughout.
   It is read-only against the repository and needs no third-party packages.
+- `reference/day03_k_digit_subsequence.py` is the Day03 part2 analogue: it
+  cross-checks the monotonic-stack greedy against `itertools.combinations` on
+  the sample (3121910778619), boundary banks, and 2000 seeded random small
+  banks, then verifies the real-input total (170997883706617) through the fast
+  implementation alone because the C(100,12) brute force is intractable.
+  Run it with `python3 skills/brute-force-cross-check/reference/day03_k_digit_subsequence.py`.
 - Do not weaken a solution's own regression tests to make a cross-check appear
   successful; the reference is an additional oracle, not a replacement for
   `tests/test_dayNN.py`.

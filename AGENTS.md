@@ -80,8 +80,14 @@ exits nonzero if any check fails or the working tree is dirty or diverged.
 solution (suffix-max, sliding window, greedy rule) against a tiny independent
 brute-force reference on the official sample, the real input, and boundary
 banks. Use it when a review must independently confirm an optimized
-implementation's real-input total; its runnable Day03 example is
-`skills/brute-force-cross-check/reference/day03_pair_joltage.py`.
+implementation's real-input total. Runnable Day03 references:
+`skills/brute-force-cross-check/reference/day03_pair_joltage.py` (part 1,
+O(n^2) ordered pairs) and
+`skills/brute-force-cross-check/reference/day03_k_digit_subsequence.py`
+(part 2, `itertools.combinations` on the 12-digit subsequence, including
+seeded random small-bank agreement; the C(100,12) brute force on the real
+input is intractable so that reference verifies the real total via the fast
+implementation alone).
 
 ## Validation
 
