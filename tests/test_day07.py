@@ -99,6 +99,60 @@ def test_part1_adjacent_splitters_spawn_down_not_sideways() -> None:
     assert day07.part1(grid) == 1
 
 
+def test_part2_sample() -> None:
+    assert day07.part2(SAMPLE_GRID) == 40
+
+
+def test_part2_bundled_sample_file() -> None:
+    grid = day07.read_grid(INPUTS / "Day07Test.txt")
+    assert grid == SAMPLE_GRID
+    assert day07.part2(grid) == 40
+
+
+def test_part2_real_input() -> None:
+    grid = day07.read_grid(INPUTS / "Day07.txt")
+    assert day07.part2(grid) == 29893386035180
+
+
+def test_part2_empty_grid() -> None:
+    assert day07.part2([]) == 0
+
+
+def test_part2_missing_start_raises() -> None:
+    with pytest.raises(ValueError, match="exactly one S"):
+        day07.part2(["..", ".."])
+
+
+def test_part2_single_cell() -> None:
+    assert day07.part2(["S"]) == 1
+
+
+def test_part2_no_splitter_straight_down() -> None:
+    assert day07.part2(["S", ".", ".", "."]) == 1
+
+
+def test_part2_single_splitter() -> None:
+    assert day07.part2(["S", ".", "^"]) == 2
+
+
+def test_part2_converging_timelines_stay_distinct() -> None:
+    grid = [
+        "...S...",
+        "...^...",
+        "..^.^..",
+        ".......",
+    ]
+    assert day07.part2(grid) == 4
+
+
+def test_part2_splitter_at_left_edge() -> None:
+    assert day07.part2(["S..", "^..", "..."]) == 2
+
+
+def test_part2_splitter_at_right_edge() -> None:
+    assert day07.part2(["..S", "..^"]) == 2
+
+
 def test_read_grid_empty_filename() -> None:
     with pytest.raises(ValueError, match="filename"):
         day07.read_grid("")

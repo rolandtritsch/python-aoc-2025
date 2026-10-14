@@ -36,3 +36,4 @@ def solve() -> None:
     print(f"Day06 - part2: {day06.part2(grid)}")
     manifold = day07.read_grid(inputs / "Day07.txt")
     print(f"Day07 - part1: {day07.part1(manifold)}")
+    print(f"Day07 - part2: {day07.part2(manifold)}")

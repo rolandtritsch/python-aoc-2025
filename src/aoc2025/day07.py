@@ -1,12 +1,14 @@
-"""Day07: count how many times a tachyon beam splits in the manifold.
+"""Day07: model tachyon beams splitting inside the manifold.
 
 The manifold diagram is a rectangular grid of ``.`` (empty space), ``^``
 (splitters), and a single ``S`` (the beam's entry point). A tachyon beam enters
 at ``S`` and always moves downward. It passes freely through empty space, but
 when it reaches a splitter it is stopped and two new beams continue from the
-splitter's immediate left and right, then move downward. Two beams arriving in
-the same column merge into one. Part 1 counts every splitter hit, i.e. the total
-number of times a beam is split.
+splitter's immediate left and right, then move downward. Two classical beams
+arriving in the same column merge into one. Part 1 counts every splitter hit,
+i.e. the total number of times a beam is split. Part 2 sends a single quantum
+particle that takes both splitter branches at once, and counts the number of
+distinct timelines (paths) a completed journey can produce.
 """
 
 from collections.abc import Sequence
@@ -80,3 +82,35 @@ def part1(grid: Sequence[str]) -> int:
                 next_active.add(column)
         active = next_active
     return splits
+
+
+def part2(grid: Sequence[str]) -> int:
+    """Return the number of distinct timelines after one quantum particle travels.
+
+    A single particle takes both branches of every splitter it reaches, so each
+    timeline that arrives at a splitter forks into two timelines (one column
+    left, one column right), while an empty cell continues the timeline straight
+    down. Unlike part 1, timelines are never merged: two timelines that happen
+    to occupy the same cell reached it along different histories and remain
+    distinct. Timelines are therefore tracked as per-column counts for the
+    current row, and each timeline that leaves the grid at the left/right edge
+    or the bottom ends and is counted exactly once. Runs in O(R * C) time and
+    O(C) space for an ``R``-row, ``C``-column grid.
+    """
+    if not grid:
+        return 0
+    width = len(grid[0])
+    active: dict[int, int] = {_entry_column(grid): 1}
+    timelines = 0
+    for row in grid:
+        next_active: dict[int, int] = {}
+        for column, count in active.items():
+            if column < 0 or column >= width:
+                timelines += count
+            elif row[column] == _SPLITTER:
+                next_active[column - 1] = next_active.get(column - 1, 0) + count
+                next_active[column + 1] = next_active.get(column + 1, 0) + count
+            else:
+                next_active[column] = next_active.get(column, 0) + count
+        active = next_active
+    return timelines + sum(active.values())
