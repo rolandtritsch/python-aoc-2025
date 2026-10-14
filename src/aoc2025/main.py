@@ -2,11 +2,11 @@
 
 from pathlib import Path
 
-from aoc2025 import day00
+from aoc2025 import day00, day01
 
 
 def solve() -> None:
-    """Read checkout-local inputs and print the answers for both Day00 parts.
+    """Read checkout-local inputs and print every implemented part's answer.
 
     The top-level inputs directory belongs to the checkout, not the installed
     package. Use uv sync's default editable installation to run this command.
@@ -15,3 +15,5 @@ def solve() -> None:
     values = day00.read_file(inputs / "Day00.txt")
     print(f"Day00 - part1: {day00.part1(values)}")
     print(f"Day00 - part2: {day00.part2(values)}")
+    rotations = day01.read_rotations(inputs / "Day01.txt")
+    print(f"Day01 - part1: {day01.part1(rotations)}")
