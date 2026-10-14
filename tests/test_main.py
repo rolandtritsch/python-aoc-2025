@@ -4,15 +4,24 @@ import subprocess
 import sys
 from pathlib import Path
 
+from aoc2025 import day00, day01
 from aoc2025.main import solve
 
-EXPECTED = (
-    "Day00 - part1: 55\n"
-    "Day00 - part2: "
-    "434665576869374564356885276750406258025646605173717804024817290895365554179490"
-    "518904038798400792551692959225930803226347752096896232398733224711616429964409"
-    "06533187938298969649928516003704476137795166849228875\n"
-)
+INPUTS = Path(__file__).resolve().parents[1] / "inputs"
+
+
+def expected_output() -> str:
+    """Return the full runner output for every implemented part."""
+    values = day00.read_file(INPUTS / "Day00.txt")
+    rotations = day01.read_rotations(INPUTS / "Day01.txt")
+    return (
+        f"Day00 - part1: {day00.part1(values)}\n"
+        f"Day00 - part2: {day00.part2(values)}\n"
+        f"Day01 - part1: {day01.part1(rotations)}\n"
+    )
+
+
+EXPECTED = expected_output()
 
 
 def test_runner_output(capsys) -> None:
@@ -36,7 +45,8 @@ def test_imports_are_silent(tmp_path: Path) -> None:
         [
             sys.executable,
             "-c",
-            "import aoc2025; import aoc2025.day00; import aoc2025.main",
+            "import aoc2025; import aoc2025.day00; import aoc2025.day01; "
+            "import aoc2025.main",
         ],
         cwd=tmp_path,
         capture_output=True,
