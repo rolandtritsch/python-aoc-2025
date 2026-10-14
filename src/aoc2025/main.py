@@ -32,3 +32,5 @@ def solve() -> None:
     print(f"Day05 - part2: {day05.part2(database.ranges)}")
     worksheet = day06.read_worksheet(inputs / "Day06.txt")
     print(f"Day06 - part1: {day06.part1(worksheet)}")
+    grid = day06.read_grid(inputs / "Day06.txt")
+    print(f"Day06 - part2: {day06.part2(grid)}")
