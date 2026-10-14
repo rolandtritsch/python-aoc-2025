@@ -89,6 +89,18 @@ seeded random small-bank agreement; the C(100,12) brute force on the real
 input is intractable so that reference verifies the real total via the fast
 implementation alone).
 
+`skills/grid-neighbour-counting/SKILL.md` distills how to independently verify
+a grid-counting solution whose rule is a threshold on occupied neighbours
+(orthogonal plus diagonal, or orthogonal only) using a padded-grid reference
+that removes all bounds checks, so the reference is structurally independent of
+an implementation that guards each neighbour coordinate. Use it when a review
+must confirm a neighbour-threshold count on the official sample, the real
+input, and degenerate boundary banks (empty, single cell, full block, exactly-
+threshold exclusion, diagonal-only, single row/column). Runnable Day04
+reference: `skills/grid-neighbour-counting/reference/day04_padded_grid.py`
+(part 1, counts rolls with fewer than four occupied neighbours; sample 13,
+real input 1356, 10 boundary grids, padded == implementation throughout).
+
 ## Validation
 
 ```bash
