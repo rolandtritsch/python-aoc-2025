@@ -23,7 +23,9 @@ bounded ``outputTail``, plus parsed ``tests.passed`` and ``tests.coverage``
 and ``solve.answers`` keyed as ``"{day}.{part}"``. The overall ``passed``
 field and the process exit status are green only when every check passes and
 git parity holds; a nonzero exit flags a failed or ambiguous repo state for
-the reviewer to explain.
+the reviewer to explain. A locally committed but unpushed improvement commit
+makes ``passed`` false (head ahead of origin/main) until the CTO pushes it;
+that is accurate state, not a defect.
 """
 
 from __future__ import annotations
