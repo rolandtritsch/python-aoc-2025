@@ -138,11 +138,21 @@ review must confirm a whitespace-split worksheet parser's grand total on the
 official sample, the real input, and alignment boundary banks (right- and
 left-aligned single problems, single number row, mixed operators, wide next to
 narrow, trailing spaces, many rows, adjacent single digits) plus the
-separator-broken invalid bank. Runnable Day06 reference:
+separator-broken invalid bank. Runnable Day06 part1 reference:
 `skills/worksheet-column-block-cross-check/reference/day06_column_block.py`
 (sample 4277556, real input 6378679666679, 8 boundary banks, invalid bank
 raises ValueError, column-block == implementation throughout). Run it with
 `uv run python3 skills/worksheet-column-block-cross-check/reference/day06_column_block.py`.
+The same skill covers Day06 part2's right-to-left column reading (each number
+is one character column read top-to-bottom) with a structurally different
+transpose reference: `skills/worksheet-column-block-cross-check/reference/day06_column_block_part2.py`
+transposes the whole padded grid so each column becomes a row, splits on
+all-space rows (the separator columns' image), and reads each block's rows as
+numbers with the operator from the trailing character (sample 3263827, real
+input 11494432585168, 8 part2 boundary banks, bleed-across-separator bank
+agrees at 84, malformed worksheets raise ValueError, transpose ==
+implementation throughout). Run it with
+`uv run python3 skills/worksheet-column-block-cross-check/reference/day06_column_block_part2.py`.
 
 ## Validation
 
