@@ -80,3 +80,39 @@ def part1(rotations: Sequence[Rotation]) -> int:
         if position == 0:
             zero_count += 1
     return zero_count
+
+
+def zero_clicks(rotation: Rotation, start: int) -> int:
+    """Return how many clicks of ``rotation`` cause the dial to reach ``0``.
+
+    Each click moves the dial one number in the rotation's direction, so a
+    single rotation may pass over ``0`` several times. This counts every
+    intermediate ``0`` plus the final position when the rotation ends on ``0``.
+    The count is computed in O(1) time by counting how many click offsets land
+    on ``0`` modulo ``DIAL_SIZE``.
+    """
+    direction, distance = rotation
+    if direction == "L":
+        remainder = start % DIAL_SIZE
+    elif direction == "R":
+        remainder = (-start) % DIAL_SIZE
+    else:
+        raise ValueError(f"invalid direction {direction!r}")
+    if remainder == 0:
+        return distance // DIAL_SIZE
+    return (distance - remainder) // DIAL_SIZE + 1
+
+
+def part2(rotations: Sequence[Rotation]) -> int:
+    """Return how many clicks, total, cause the dial to point at ``0``.
+
+    Unlike :func:`part1`, every click that lands on ``0`` counts, whether it
+    happens in the middle of a rotation or at its end. Runs in O(n) time with
+    O(1) extra space for ``n`` rotations.
+    """
+    position = START_POSITION
+    zero_count = 0
+    for rotation in rotations:
+        zero_count += zero_clicks(rotation, position)
+        position = apply_rotation(rotation, position)
+    return zero_count

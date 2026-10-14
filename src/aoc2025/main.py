@@ -17,3 +17,4 @@ def solve() -> None:
     print(f"Day00 - part2: {day00.part2(values)}")
     rotations = day01.read_rotations(inputs / "Day01.txt")
     print(f"Day01 - part1: {day01.part1(rotations)}")
+    print(f"Day01 - part2: {day01.part2(rotations)}")

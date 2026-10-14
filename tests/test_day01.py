@@ -54,6 +54,40 @@ def test_part1_full_circle_returns_to_start() -> None:
     assert day01.part1([Rotation("R", 100)]) == 0
 
 
+def test_part2_sample() -> None:
+    assert day01.part2(SAMPLE_ROTATIONS) == 6
+
+
+def test_part2_bundled_sample_file() -> None:
+    rotations = day01.read_rotations(INPUTS / "Day01Test.txt")
+    assert day01.part2(rotations) == 6
+
+
+def test_part2_real_input() -> None:
+    rotations = day01.read_rotations(INPUTS / "Day01.txt")
+    assert day01.part2(rotations) == 6638
+
+
+def test_part2_no_rotations() -> None:
+    assert day01.part2([]) == 0
+
+
+def test_part2_right_rotation_lands_on_zero() -> None:
+    assert day01.part2([Rotation("R", 50)]) == 1
+
+
+def test_part2_multiple_passes_over_zero() -> None:
+    assert day01.part2([Rotation("R", 1000)]) == 10
+
+
+def test_part2_ends_on_zero_counts_once() -> None:
+    assert day01.part2([Rotation("L", 50)]) == 1
+
+
+def test_part2_full_circle_returns_to_start() -> None:
+    assert day01.part2([Rotation("R", 100)]) == 1
+
+
 @pytest.mark.parametrize(
     ("rotation", "start", "expected"),
     [
@@ -72,6 +106,11 @@ def test_apply_rotation(rotation: Rotation, start: int, expected: int) -> None:
 def test_apply_rotation_invalid_direction() -> None:
     with pytest.raises(ValueError, match="direction"):
         day01.apply_rotation(Rotation("X", 1), 0)
+
+
+def test_zero_clicks_invalid_direction() -> None:
+    with pytest.raises(ValueError, match="direction"):
+        day01.zero_clicks(Rotation("X", 1), 0)
 
 
 def test_read_rotations_empty_filename() -> None:
