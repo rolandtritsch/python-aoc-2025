@@ -154,6 +154,23 @@ agrees at 84, malformed worksheets raise ValueError, transpose ==
 implementation throughout). Run it with
 `uv run python3 skills/worksheet-column-block-cross-check/reference/day06_column_block_part2.py`.
 
+`skills/closest-pairs-circuit-cross-check/SKILL.md` distills how to
+independently verify a solution that connects the closest pairs of 3D points
+into circuits (Day08 Playground part 1) using a sorted-pair merged-set reference
+that shares no heap, parent array, or path compression with an implementation
+that pops a `(squared_distance, i, j)` min-heap and unions roots in a disjoint-set
+forest. It also pins the connection-budget reading: every *examined* pair
+consumes one of the K connections even when its boxes are already in the same
+circuit (the sample examines 10 closest pairs with one in-circuit skip and gives
+40; treating skips as free would give 50), and checks that the K-th closest
+distance is unique so the answer is tie-invariant. Runnable Day08 part1
+reference: `skills/closest-pairs-circuit-cross-check/reference/day08_closest_pairs.py`
+(sample 40, real input 90036, real 1000-pair cutoff distance unique, 9 boundary
+banks including skip-consumes-slot, ties-at-cutoff, connect-everything, and
+disconnected clusters, too-few-boxes raises, sorted-set == implementation
+throughout). Run it with
+`uv run python3 skills/closest-pairs-circuit-cross-check/reference/day08_closest_pairs.py`.
+
 `skills/beam-split-cross-check/SKILL.md` distills how to independently verify
 a merge-propagation simulation whose rule is "entities move downward and merge
 when they occupy the same cell/column, and the answer counts discrete splitter
