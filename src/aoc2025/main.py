@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from aoc2025 import day00, day01, day02, day03, day04, day05, day06, day07, day08
+from aoc2025 import day00, day01, day02, day03, day04, day05, day06, day07, day08, day09
 
 
 def solve() -> None:
@@ -40,3 +40,5 @@ def solve() -> None:
     boxes = day08.read_boxes(inputs / "Day08.txt")
     print(f"Day08 - part1: {day08.part1(boxes)}")
     print(f"Day08 - part2: {day08.part2(boxes)}")
+    tiles = day09.read_tiles(inputs / "Day09.txt")
+    print(f"Day09 - part1: {day09.part1(tiles)}")
