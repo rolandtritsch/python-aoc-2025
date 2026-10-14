@@ -156,20 +156,29 @@ implementation throughout). Run it with
 
 `skills/closest-pairs-circuit-cross-check/SKILL.md` distills how to
 independently verify a solution that connects the closest pairs of 3D points
-into circuits (Day08 Playground part 1) using a sorted-pair merged-set reference
-that shares no heap, parent array, or path compression with an implementation
-that pops a `(squared_distance, i, j)` min-heap and unions roots in a disjoint-set
-forest. It also pins the connection-budget reading: every *examined* pair
-consumes one of the K connections even when its boxes are already in the same
-circuit (the sample examines 10 closest pairs with one in-circuit skip and gives
-40; treating skips as free would give 50), and checks that the K-th closest
+into circuits (Day08 Playground parts 1 and 2) using a sorted-pair merged-set
+reference that shares no heap, parent array, or path compression with an
+implementation that pops a `(squared_distance, i, j)` min-heap and unions roots
+in a disjoint-set forest. It pins the connection-budget reading: every *examined*
+pair consumes one of the K connections even when its boxes are already in the
+same circuit (the sample examines 10 closest pairs with one in-circuit skip and
+gives 40; treating skips as free would give 50), and checks that the K-th closest
 distance is unique so the answer is tie-invariant. Runnable Day08 part1
 reference: `skills/closest-pairs-circuit-cross-check/reference/day08_closest_pairs.py`
 (sample 40, real input 90036, real 1000-pair cutoff distance unique, 9 boundary
 banks including skip-consumes-slot, ties-at-cutoff, connect-everything, and
 disconnected clusters, too-few-boxes raises, sorted-set == implementation
-throughout). Run it with
-`uv run python3 skills/closest-pairs-circuit-cross-check/reference/day08_closest_pairs.py`.
+throughout). The same skill covers Day08 part2's final-connection reading (keep
+connecting until every box is in one circuit, multiply the X coordinates of the
+pair that completed the merge) with
+`skills/closest-pairs-circuit-cross-check/reference/day08_final_connection.py`
+(sample 25272 = 216 * 117, real input 6083499488 = 80198 * 75856, real
+final-merge distance unique, 6 boundary banks including two-clusters-closest-
+cross, final-not-max-x, ties-at-final-merge, and uses-x-not-index, too-few-boxes
+raises, merged-set == implementation throughout). Run them with
+`uv run python3 skills/closest-pairs-circuit-cross-check/reference/day08_closest_pairs.py`
+and
+`uv run python3 skills/closest-pairs-circuit-cross-check/reference/day08_final_connection.py`.
 
 `skills/beam-split-cross-check/SKILL.md` distills how to independently verify
 a merge-propagation simulation whose rule is "entities move downward and merge
