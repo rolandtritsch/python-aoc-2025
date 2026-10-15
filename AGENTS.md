@@ -239,6 +239,29 @@ oracle agrees with the implementation on a 200-machine seeded random fuzz).
 Run it with
 `uv run python3 skills/toggle-lights-cross-check/reference/day10_min_presses_bruteforce.py`.
 
+`skills/joltage-presses-cross-check/SKILL.md` distills how to independently
+verify a "factory machines with joltage-counter buttons, fewest presses"
+solution (Day10 Factory part 2: each press of a button increments each counter
+its wiring lists; counters start at 0; the answer is the fewest total presses
+that make every machine's counters land exactly on its required joltage
+tuple, raising ``ValueError`` when a machine cannot be configured) against an
+exact-Dijkstra reference that enumerates counter-count states (one press, one
+unit-cost edge; presses that push a counter past its joltage target are
+pruned) and shares none of the LP relaxation, exact simplex, shadow-price,
+fractional-branch, or branch-and-bound machinery under review. Runnable
+Day10 part 2 reference:
+`skills/joltage-presses-cross-check/reference/day10_fewest_presses_dijkstra.py`
+(reproduces the official sample total 33 = 10 + 12 + 11 and the real-input
+total 16765 on completed machines, Dijkstra == implementation throughout; the
+largest real machines have a huge product of target spaces and are not
+enumerated within the node budget, which the skill reports explicitly). Use
+it when a review must independently confirm the fewest-presses joltage total
+on the official sampleholiday, the real input, and joltage boundary banks
+(single counter reachable by one button, a shared counter splitting presses
+across buttons, a single button wiring every counter, an unconfigurable
+machine raising ``ValueError``). Run it with
+`uv run python3 skills/joltage-presses-cross-check/reference/day10_fewest_presses_dijkstra.py`.
+
 ## Validation
 
 ```bash
