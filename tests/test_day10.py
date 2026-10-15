@@ -117,3 +117,53 @@ def test_read_machines_without_final_newline(tmp_path: Path) -> None:
         day10.Machine("#", ((0,),), (1,)),
         day10.Machine(".", ((0,),), (0,)),
     ]
+
+
+def test_part2_sample() -> None:
+    assert day10.part2(SAMPLE_MACHINES) == 33
+
+
+def test_part2_bundled_sample_file() -> None:
+    machines = day10.read_machines(INPUTS / "Day10Test.txt")
+    assert day10.part2(machines) == 33
+
+
+def test_part2_real_input() -> None:
+    machines = day10.read_machines(INPUTS / "Day10.txt")
+    assert day10.part2(machines) == 16765
+
+
+def test_part2_empty_machine_list() -> None:
+    assert day10.part2([]) == 0
+
+
+def test_part2_single_counter() -> None:
+    machines = [day10.Machine("#", ((0,),), (5,))]
+    assert day10.part2(machines) == 5
+
+
+def test_part2_shared_counter_splits_presses() -> None:
+    machines = [day10.Machine("#", ((0,), (0,)), (7,))]
+    assert day10.part2(machines) == 7
+
+
+def test_part2_single_button_increments_all_counters() -> None:
+    machines = [day10.Machine("##", ((0, 1),), (3, 3))]
+    assert day10.part2(machines) == 3
+
+
+def test_part2_fractional_relaxation_branches() -> None:
+    machines = [
+        day10.Machine(
+            ".####",
+            buttons=((0, 1, 2, 4), (0, 1, 2), (2, 3), (2, 4), (0, 3)),
+            joltages=(31, 20, 40, 30, 10),
+        )
+    ]
+    assert day10.part2(machines) == 51
+
+
+def test_part2_unreachable_counter_raises() -> None:
+    machines = [day10.Machine("#.", ((1,),), (1, 0))]
+    with pytest.raises(ValueError, match="cannot be configured"):
+        day10.part2(machines)

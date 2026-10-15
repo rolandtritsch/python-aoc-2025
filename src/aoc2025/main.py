@@ -57,3 +57,4 @@ def solve() -> None:
     print(f"Day09 - part2: {day09.part2(tiles)}")
     machines = day10.read_machines(inputs / "Day10.txt")
     print(f"Day10 - part1: {day10.part1(machines)}")
+    print(f"Day10 - part2: {day10.part2(machines)}")

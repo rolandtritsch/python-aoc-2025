@@ -1,16 +1,18 @@
-"""Day10: press buttons to configure each factory machine's indicator lights.
+"""Day10: press buttons to configure each factory machine.
 
 Each machine line lists an indicator light diagram (``.`` off, ``#`` on), one
-or more button wiring schematics, and joltage requirements. Pushing a button
-toggles every light it is wired to. Because pushing a button twice cancels
-itself out, each button is effectively pushed either zero or one times, and the
-fewest total presses that light the diagram exactly is the minimum-weight
-solution of a linear system over GF(2). Part 1 sums that minimum across every
-machine; the joltage requirements are irrelevant and ignored.
+or more button wiring schematics, and joltage requirements. Part 1 toggles
+lights: pushing a button twice cancels, so each button is effectively pushed
+zero or one times, and the fewest total presses that light the diagram exactly
+is the minimum-weight solution of a linear system over GF(2). Part 2 flips the
+lever so every press *increments* the counters named by the button wiring; it
+sums the fewest non-negative integer presses that reach each machine's exact
+joltage targets.
 """
 
 import re
 from collections.abc import Sequence
+from fractions import Fraction
 from pathlib import Path
 from typing import NamedTuple
 
@@ -174,3 +176,196 @@ def part1(machines: Sequence[Machine]) -> int:
     zero presses.
     """
     return sum(_min_presses(machine.diagram, machine.buttons) for machine in machines)
+
+
+def _simplex_maximize(
+    columns: Sequence[Sequence[int]], costs: Sequence[int], num_rows: int
+) -> tuple[Fraction, list[Fraction]] | None:
+    """Maximize ``sum(costs[c] * z[c])`` with an exact tableau simplex.
+
+    ``columns[c]`` holds one signed coefficient per row (each in ``{-1, 0, 1}``);
+    every row is constrained to ``<= 1`` and every variable ``z[c] >= 0``. This
+    is the dual of the joltage linear program, so the returned shadow price of
+    row ``r``'s slack is the primal press count ``x[r]``. Returns ``None`` when
+    the objective is unbounded, meaning the primal is infeasible.
+    """
+    num_columns = len(columns)
+    width = num_columns + num_rows
+    tableau: list[list[Fraction]] = []
+    for row in range(num_rows):
+        row_values = [Fraction(0)] * (width + 1)
+        for column, column_values in enumerate(columns):
+            coefficient = column_values[row]
+            if coefficient:
+                row_values[column] = Fraction(coefficient)
+        row_values[num_columns + row] = Fraction(1)
+        row_values[width] = Fraction(1)
+        tableau.append(row_values)
+
+    objective = [Fraction(0)] * (width + 1)
+    for column, cost in enumerate(costs):
+        objective[column] = Fraction(cost)
+
+    basis = [num_columns + row for row in range(num_rows)]
+    basic = [False] * width
+    for variable in basis:
+        basic[variable] = True
+
+    while True:
+        entering = -1
+        for column in range(width):
+            if not basic[column] and objective[column] > 0:
+                entering = column
+                break
+        if entering == -1:
+            break
+        pivot_row = -1
+        best_ratio = None
+        for row in range(num_rows):
+            coefficient = tableau[row][entering]
+            if coefficient > 0:
+                ratio = tableau[row][width] / coefficient
+                if best_ratio is None or ratio < best_ratio:
+                    best_ratio = ratio
+                    pivot_row = row
+        if pivot_row == -1:
+            return None
+        pivot_row_values = tableau[pivot_row]
+        pivot = pivot_row_values[entering]
+        for column in range(width + 1):
+            pivot_row_values[column] /= pivot
+        for row in range(num_rows):
+            if row == pivot_row:
+                continue
+            factor = tableau[row][entering]
+            if factor:
+                for column in range(width + 1):
+                    tableau[row][column] -= factor * pivot_row_values[column]
+        factor = objective[entering]
+        if factor:
+            for column in range(width + 1):
+                objective[column] -= factor * pivot_row_values[column]
+        basic[basis[pivot_row]] = False
+        basic[entering] = True
+        basis[pivot_row] = entering
+
+    value = -objective[width]
+    shadow = [-objective[num_columns + row] for row in range(num_rows)]
+    return value, shadow
+
+
+def _min_joltage_presses(
+    buttons: Sequence[Sequence[int]], joltages: Sequence[int]
+) -> int:
+    """Return the fewest presses reaching every joltage target exactly.
+
+    Pressing button ``j`` increments counter ``i`` by one for each ``i`` in
+    ``buttons[j]``, so the counters satisfy ``A x = joltages`` for the 0/1
+    incidence matrix ``A`` and non-negative integer press counts ``x``. The
+    minimum total press count is the minimum-weight such ``x``. It is found by
+    branch and bound using the exact LP relaxation ``min sum(x)`` subject to
+    ``A x = joltages`` and ``x >= 0``: a fractional press count is fixed to its
+    floor or ceiling. Raises ValueError when no press counts reach the targets.
+    """
+    num_counters = len(joltages)
+    num_buttons = len(buttons)
+    masks = [0] * num_buttons
+    for button_index, button in enumerate(buttons):
+        for counter in button:
+            masks[button_index] |= 1 << counter
+
+    cover = [0] * num_counters
+    for counter in range(num_counters):
+        for button_index in range(num_buttons):
+            if masks[button_index] >> counter & 1:
+                cover[counter] |= 1 << button_index
+
+    def relax(
+        targets: Sequence[int], upper: Sequence[int | None]
+    ) -> tuple[Fraction, list[Fraction]] | None:
+        columns: list[list[int]] = []
+        costs: list[int] = []
+        for counter in range(num_counters):
+            column = [0] * num_buttons
+            for button_index in range(num_buttons):
+                if cover[counter] >> button_index & 1:
+                    column[button_index] = 1
+            columns.append(column)
+            costs.append(targets[counter])
+        for counter in range(num_counters):
+            column = [0] * num_buttons
+            for button_index in range(num_buttons):
+                if cover[counter] >> button_index & 1:
+                    column[button_index] = -1
+            columns.append(column)
+            costs.append(-targets[counter])
+        for button_index in range(num_buttons):
+            if upper[button_index] is not None:
+                column = [0] * num_buttons
+                column[button_index] = -1
+                columns.append(column)
+                costs.append(-upper[button_index])
+        return _simplex_maximize(columns, costs, num_buttons)
+
+    best: int | None = None
+
+    def search(targets: list[int], upper: list[int | None], cost: int) -> None:
+        nonlocal best
+        result = relax(targets, upper)
+        if result is None:
+            return
+        value, presses = result
+        if best is not None and cost + value >= best:
+            return
+        if all(press.denominator == 1 for press in presses):
+            total = cost + sum(int(press) for press in presses)
+            if best is None or total < best:
+                best = total
+            return
+        chosen = max(
+            (
+                button_index
+                for button_index in range(num_buttons)
+                if presses[button_index].denominator != 1
+            ),
+            key=lambda button_index: presses[button_index] - int(presses[button_index]),
+        )
+        floor = presses[chosen].numerator // presses[chosen].denominator
+        if floor >= 0 and (upper[chosen] is None or floor < upper[chosen]):
+            next_upper = list(upper)
+            next_upper[chosen] = floor
+            search(targets, next_upper, cost)
+        ceiling = floor + 1
+        next_targets = list(targets)
+        feasible = True
+        for counter in range(num_counters):
+            if masks[chosen] >> counter & 1:
+                next_targets[counter] -= ceiling
+                if next_targets[counter] < 0:
+                    feasible = False
+        if feasible:
+            next_upper = list(upper)
+            if upper[chosen] is not None:
+                next_upper[chosen] = upper[chosen] - ceiling
+                if next_upper[chosen] < 0:
+                    feasible = False
+            if feasible:
+                search(next_targets, next_upper, cost + ceiling)
+
+    search(list(joltages), [None] * num_buttons, 0)
+    if best is None:
+        raise ValueError("machine cannot be configured")
+    return best
+
+
+def part2(machines: Sequence[Machine]) -> int:
+    """Return the fewest total presses to reach every machine's joltage levels.
+
+    Each machine's counters start at zero and every press increments the listed
+    counters by one, so each machine contributes the minimum non-negative
+    integer solution of ``A x = joltages``. The indicator light diagrams are
+    ignored. An empty machine list contributes zero presses.
+    """
+    return sum(
+        _min_joltage_presses(machine.buttons, machine.joltages) for machine in machines
+    )
