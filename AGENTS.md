@@ -180,6 +180,22 @@ raises, merged-set == implementation throughout). Run them with
 and
 `uv run python3 skills/closest-pairs-circuit-cross-check/reference/day08_final_connection.py`.
 
+`skills/loop-fill-rectangle-cross-check/SKILL.md` distills how to independently
+verify a solution that fills a closed orthogonal loop (consecutive tiles share a
+row or column, list wraps) plus its interior and then finds the largest
+red-cornered rectangle made entirely of red/green tiles (Day09 part 2). It uses
+a per-cell flood-fill reference that shares no edge/interval/even-odd machinery
+with a scanline implementation, and verifies the real input's filled volume with
+Pick's theorem plus the shoelace formula (no cell enumeration). Runnable Day09
+part2 reference:
+`skills/loop-fill-rectangle-cross-check/reference/day09_loop_fill.py` (sample
+24, tiny-square-loop 9, thin-rectangle-loop 10, interior-notch 8, 11-shape
+orthogonal-loop corpus, real filled volume 7070643880 by Pick and by
+implementation region sum, real rectangle total 1439894345 reproduced by the
+implementation because the ~9.3e9-cell bounding box makes a per-cell rectangle
+sweep intractable; per-cell fill == implementation throughout). Run it with
+`uv run python3 skills/loop-fill-rectangle-cross-check/reference/day09_loop_fill.py`.
+
 `skills/beam-split-cross-check/SKILL.md` distills how to independently verify
 a merge-propagation simulation whose rule is "entities move downward and merge
 when they occupy the same cell/column, and the answer counts discrete splitter
