@@ -60,6 +60,57 @@ def test_part1_three_tiles_picks_widest_pair() -> None:
     assert day09.part1(tiles) == 20
 
 
+def test_part2_sample() -> None:
+    assert day09.part2(SAMPLE_TILES) == 24
+
+
+def test_part2_bundled_sample_file() -> None:
+    tiles = day09.read_tiles(INPUTS / "Day09Test.txt")
+    assert day09.part2(tiles) == 24
+
+
+def test_part2_real_input() -> None:
+    tiles = day09.read_tiles(INPUTS / "Day09.txt")
+    assert day09.part2(tiles) == 1439894345
+
+
+def test_part2_tiny_square_loop() -> None:
+    tiles = [
+        day09.Tile(0, 0),
+        day09.Tile(2, 0),
+        day09.Tile(2, 2),
+        day09.Tile(0, 2),
+    ]
+    assert day09.part2(tiles) == 9
+
+
+def test_part2_thin_rectangle_loop() -> None:
+    tiles = [
+        day09.Tile(0, 0),
+        day09.Tile(4, 0),
+        day09.Tile(4, 1),
+        day09.Tile(0, 1),
+    ]
+    assert day09.part2(tiles) == 10
+
+
+def test_part2_interior_prunes_diagonal_corner() -> None:
+    tiles = [
+        day09.Tile(0, 0),
+        day09.Tile(3, 0),
+        day09.Tile(3, 1),
+        day09.Tile(1, 1),
+        day09.Tile(1, 3),
+        day09.Tile(0, 3),
+    ]
+    assert day09.part2(tiles) == 8
+
+
+def test_part2_single_tile_raises() -> None:
+    with pytest.raises(ValueError, match="at least two"):
+        day09.part2([day09.Tile(0, 0)])
+
+
 def test_part1_single_tile_raises() -> None:
     with pytest.raises(ValueError, match="at least two"):
         day09.part1([day09.Tile(0, 0)])

@@ -42,3 +42,4 @@ def solve() -> None:
     print(f"Day08 - part2: {day08.part2(boxes)}")
     tiles = day09.read_tiles(inputs / "Day09.txt")
     print(f"Day09 - part1: {day09.part1(tiles)}")
+    print(f"Day09 - part2: {day09.part2(tiles)}")
