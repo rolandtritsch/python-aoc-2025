@@ -221,6 +221,24 @@ distinct, enumerated == memoized == implementation throughout). Run them with
 and
 `uv run python3 skills/beam-split-cross-check/reference/day07_timeline_count.py`.
 
+`skills/toggle-lights-cross-check/SKILL.md` distills how to independently
+verify a toggle-lights solution whose rule is "each button toggles every light
+it is wired to; fewest presses per machine, summed" (Day10 Factory part 1)
+using a subset-enumeration reference that simulates toggles on a plain boolean
+light list and shares no GF(2) Gaussian elimination, null-space enumeration, or
+bit-mask algebra with an implementation that reduces an augmented coefficient
+matrix and searches the null space for the minimum popcount. Use it when a
+review must confirm a minimum-press toggle total on the official sample, the
+real input, and boundary banks (single light required-on/off, redundant
+buttons wired to the same light, one button wiring two lights, unconfigurable
+machine raising ValueError). Runnable Day10 part1 reference:
+`skills/toggle-lights-cross-check/reference/day10_min_presses_bruteforce.py`
+(sample 7 = 2 + 3 + 2, real input 417, 6 boundary banks including the
+unconfigurable machine, brute-force == implementation throughout; the same
+oracle agrees with the implementation on a 200-machine seeded random fuzz).
+Run it with
+`uv run python3 skills/toggle-lights-cross-check/reference/day10_min_presses_bruteforce.py`.
+
 ## Validation
 
 ```bash
