@@ -123,7 +123,10 @@ def _main() -> int:
 
     sample_machines = day10.read_machines(sample_path)
     sample_total, sample_done, _ = _checked(sample_machines)
-    print("sample: completed-total %d (%d machines) -> expected 33" % (sample_total, sample_done))
+    print(
+        "sample: completed-total %d (%d machines) -> expected 33"
+        % (sample_total, sample_done)
+    )
     if sample_total != 33:
         print("FAIL: sample should total 33")
         return 1
@@ -133,12 +136,20 @@ def _main() -> int:
     real_total, real_done, unfinished = _checked(real_machines)
     print(
         "real: completed-total %d done %d/%d unfinished %d (%.1fs)"
-        % (real_total, real_done, len(real_machines), len(unfinished), time.time() - started)
+        % (
+            real_total,
+            real_done,
+            len(real_machines),
+            len(unfinished),
+            time.time() - started,
+        )
     )
     if unfinished:
         print("real: not enumerated (over budget):", unfinished[:40])
 
-    print("verdict: sample reproduced (33); real completed machines agree; answer 16765")
+    print(
+        "verdict: sample reproduced (33); real completed machines agree; answer 16765"
+    )
     return 0
 
 
