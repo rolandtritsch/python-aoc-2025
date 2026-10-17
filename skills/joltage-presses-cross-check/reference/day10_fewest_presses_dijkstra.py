@@ -33,9 +33,9 @@ import sys
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-
 from aoc2025 import day10
+
+ROOT = Path(__file__).resolve().parents[3]
 
 BUDGET = 5_000_000
 _BUDGET_EXCEEDED = "budget exceeded"
@@ -61,13 +61,11 @@ def _fewest_presses(
     target = tuple(joltages)
     start = (0,) * num_counters
 
-    import heapq as _heapq
-
     dist = {start: 0}
     queue = [(0, start)]
     nodes = 0
     while queue:
-        cost, state = _heapq.heappop(queue)
+        cost, state = heapq.heappop(queue)
         if cost != dist[state]:
             continue
         nodes += 1
@@ -89,7 +87,7 @@ def _fewest_presses(
             next_cost = cost + 1
             if next_cost < dist.get(next_state, 10**9):
                 dist[next_state] = next_cost
-                _heapq.heappush(queue, (next_cost, next_state))
+                heapq.heappush(queue, (next_cost, next_state))
     raise ValueError("machine cannot be configured")
 
 
@@ -113,7 +111,7 @@ def _main() -> int:
     sample_path = repo / "inputs" / "Day10Test.txt"
     real_path = repo / "inputs" / "Day10.txt"
 
-    for expected, path, label in (
+    for _expected, path, label in (
         ("sample", sample_path, "Day10Test.txt"),
         ("real", real_path, "Day10.txt"),
     ):
@@ -124,8 +122,8 @@ def _main() -> int:
     sample_machines = day10.read_machines(sample_path)
     sample_total, sample_done, _ = _checked(sample_machines)
     print(
-        "sample: completed-total %d (%d machines) -> expected 33"
-        % (sample_total, sample_done)
+        f"sample: completed-total {sample_total} ({sample_done} machines) "
+        "-> expected 33"
     )
     if sample_total != 33:
         print("FAIL: sample should total 33")
@@ -134,15 +132,10 @@ def _main() -> int:
     real_machines = day10.read_machines(real_path)
     started = time.time()
     real_total, real_done, unfinished = _checked(real_machines)
+    elapsed = time.time() - started
     print(
-        "real: completed-total %d done %d/%d unfinished %d (%.1fs)"
-        % (
-            real_total,
-            real_done,
-            len(real_machines),
-            len(unfinished),
-            time.time() - started,
-        )
+        f"real: completed-total {real_total} done {real_done}/{len(real_machines)} "
+        f"unfinished {len(unfinished)} ({elapsed:.1f}s)"
     )
     if unfinished:
         print("real: not enumerated (over budget):", unfinished[:40])
